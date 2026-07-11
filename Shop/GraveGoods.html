@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grave Goods // Underground Drop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0d0f12;
+            background-image: radial-gradient(circle at center, rgba(25, 30, 36, 0.6) 0%, #060709 100%), 
+                              url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            color: #b3b9c1;
+            font-family: 'Special Elite', monospace;
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background: rgba(6, 7, 9, 0.9);
+            border-bottom: 2px solid #1b222b;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #8a95a5;
+            text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.9);
+            text-transform: uppercase;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 10px;
+        }
+
+        .lang-btn {
+            background: #1c232e;
+            border: 1px solid #3a4759;
+            color: #8a95a5;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: 'Special Elite', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .lang-btn.active {
+            background: #3a4759;
+            color: #fff;
+            border-color: #5a6575;
+        }
+
+        .hero {
+            padding: 140px 20px 40px 20px;
+            text-align: center;
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: #5a6575;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .catalog-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .products-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, #13181f 0%, #0b0d10 100%);
+            border: 2px solid #1c232e;
+            border-radius: 8px 8px 0 0;
+            width: 280px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #3a4759;
+        }
+
+        .product-img-box {
+            width: 100%;
+            height: 340px;
+            background-color: #050608;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 2px solid #1c232e;
+        }
+
+        .product-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover .product-img-box img {
+            transform: scale(1.05);
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #060709;
+            color: #8a95a5;
+            padding: 5px 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            border: 1px dashed #3a4759;
+            z-index: 2;
+        }
+
+        .product-info {
+            padding: 20px;
+            text-align: center;
+            background: #0b0d10;
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #9da6b4;
+            text-transform: uppercase;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-original {
+            font-size: 11px;
+            color: #5a6575;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            color: #ccd3de;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+
+        .btn-buy {
+            display: block;
+            width: 100%;
+            background-color: #1c232e;
+            border: 1px dashed #4a5768;
+            color: #8a95a5;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-buy:hover {
+            background-color: #252f3e;
+            color: #fff;
+            border-style: solid;
+        }
+
+        /* ОКНО КУПИТЬ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(3, 4, 5, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #0b0d10;
+            border: 2px solid #1c232e;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            position: relative;
+            text-align: center;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 26px;
+            color: #4a5768;
+            cursor: pointer;
+        }
+
+        .close-modal:hover { color: #fff; }
+
+        .modal h3 {
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            color: #9da6b4;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #5a6575;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #13181f;
+            border: 1px solid #1c232e;
+            color: #fff;
+            text-align: center;
+            font-size: 16px;
+            outline: none;
+            font-family: 'Special Elite', monospace;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: #1c232e;
+            color: #fff;
+            border: 1px solid #3a4759;
+            padding: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Special Elite', monospace;
+        }
+
+        .btn-submit:hover {
+            background-color: #252f3e;
+        }
+
+        /* НОВОЕ: МОДАЛЬНОЕ ОКНО ДЛЯ БОЛЬШОЙ КАРТИНКИ */
+        .image-viewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(6, 7, 9, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        .image-viewer img {
+            max-width: 90%;
+            max-height: 85vh;
+            object-fit: contain;
+            border: 2px solid #1c232e;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+        }
+
+        .close-viewer {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 35px;
+            color: #8a95a5;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">Grave Goods</div>
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="setLanguage('ru')">RU</button>
+                <button class="lang-btn" onclick="setLanguage('az')">AZ</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <p id="hero-text">Underground drop // Baku</p>
+    </section>
+
+    <section class="catalog-section">
+        <div class="products-grid">
+            
+            <!-- Товар 1 -->
+            <div class="product-card">
+                <!-- Функция viewImage открывает картинку на весь экран -->
+                <div class="product-img-box" onclick="viewImage(this)">
+                    <span class="badge">Digger's choice</span>
+                    <img src="diesel_skinny.jpg" alt="Drop" onerror="this.src='https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&q=80'">
+                </div>
+                <div class="product-info">
+                    <div class="product-title" data-ru="Diesel skinny jeans size W33-L32" data-az="Diesel skinny jeans ölçü W33-L32">Diesel skinny jeans size W33-L32</div>
+                    <div class="product-original">Original</div>
+                    <div class="product-price">99.95 AZN</div>
+                    <button class="btn-buy" data-btn onclick="openOrderModal('Diesel skinny jeans size W33-L32', '99.95 AZN')">Забрать дроп</button>
+                </div>
+            </div>
+
+            <!-- Товар 2 -->
+            <div class="product-card">
+                <div class="product-img-box" onclick="viewImage(this)">
+                    <span class="badge">Digger's choice</span>
+                    <img src="diesel_slim.jpg" alt="Drop" onerror="this.src='https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&q=80'">
+                </div>
+                <div class="product-info">
+                    <div class="product-title" data-ru="Diesel Slim Size W32" data-az="Diesel Slim ölçü W32">Diesel Slim Size W32</div>
+                    <div class="product-original">Original</div>
+                    <div class="product-price">99.95 AZN</div>
+                    <button class="btn-buy" data-btn onclick="openOrderModal('Diesel Slim Size W32', '99.95 AZN')">Забрать дроп</button>
+                </div>
+            </div>
+
+            <!-- Товар 3 -->
+            <div class="product-card">
+                <div class="product-img-box" onclick="viewImage(this)">
+                    <span class="badge">Digger's choice</span>
+                    <img src="adidas_violet.jpg" alt="Drop" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=400&q=80'">
+                </div>
+                <div class="product-info">
+                    <div class="product-title" data-ru="Adidas Zip violet Size S" data-az="Adidas Zip bənövşəyi ölçü S">Adidas Zip violet Size S</div>
+                    <div class="product-original">Original</div>
+                    <div class="product-price">35 AZN</div>
+                    <button class="btn-buy" data-btn onclick="openOrderModal('Adidas Zip violet Size S', '35 AZN')">Забрать дроп</button>
+                </div>
+            </div>
+
+            <!-- Товар 4 -->
+            <div class="product-card">
+                <div class="product-img-box" onclick="viewImage(this)">
+                    <span class="badge">Digger's choice</span>
+                    <img src="adidas_vintage.jpg" alt="Drop" onerror="this.src='https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=400&q=80'">
+                </div>
+                <div class="product-info">
+                    <div class="product-title" data-ru="Adidas vintage Zip Size S-M (Oversize)" data-az="Adidas vintage Zip ölçü S-M (Oversize)">Adidas vintage Zip Size S-M (Oversize)</div>
+                    <div class="product-original">Original</div>
+                    <div class="product-price">65 AZN</div>
+                    <button class="btn-buy" data-btn onclick="openOrderModal('Adidas vintage Zip Size S-M (Oversize)', '65 AZN')">Забрать дроп</button>
+                </div>
+            </div>
+
+            <!-- Товар 5 -->
+            <div class="product-card">
+                <div class="product-img-box" onclick="viewImage(this)">
+                    <span class="badge">Digger's choice</span>
+                    <img src="hollister_polo.jpg" alt="Drop" onerror="this.src='https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&q=80'">
+                </div>
+                <div class="product-info">
+                    <div class="product-title" data-ru="Hollister polo red Size M" data-az="Hollister polo qırmızı ölçü M">Hollister polo red Size M</div>
+                    <div class="product-original">Original</div>
+                    <div class="product-price">45 AZN</div>
+                    <button class="btn-buy" data-btn onclick="openOrderModal('Hollister polo red Size M', '45 AZN')">Забрать дроп</button>
+                </div>
+            </div>
+
+            <!-- Товар 6 -->
+            <div class="product-card">
+                <div class="product-img-box" onclick="viewImage(this)">
+                    <span class="badge">Digger's choice</span>
+                    <img src="levis_501.jpg" alt="Drop" onerror="this.src='https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&q=80'">
+                </div>
+                <div class="product-info">
+                    <div class="product-title" data-ru="Levi’s 501 Size W34" data-az="Levi’s 501 ölçü W34">Levi’s 501 Size W34</div>
+                    <div class="product-original">Original</div>
+                    <div class="product-price">170 AZN</div>
+                    <button class="btn-buy" data-btn onclick="openOrderModal('Levi’s 501 Size W34', '170 AZN')">Забрать дроп</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Модалка заказа -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+            <h3 id="modalTitle">Оформление</h3>
+            <p id="modalProductTitle" style="color: #9da6b4; font-weight: bold; margin-top: 10px;"></p>
+            <p id="modalProductPrice" style="color: #6a7585; font-weight: bold; margin-bottom: 10px;"></p>
+            
+            <form onsubmit="sendToWhatsApp(event)">
+                <div class="form-group">
+                    <label id="label-phone">Введи свой номер телефона</label>
+                    <input type="text" id="userPhone" placeholder="+994" required>
+                </div>
+                <button type="submit" class="btn-submit" id="btn-submit">Подтвердить в WhatsApp</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ОКНО ДЛЯ ПРОСМОТРА БОЛЬШОЙ КАРТИНКИ -->
+    <div class="image-viewer" id="imageViewer" onclick="closeImageViewer()">
+        <span class="close-viewer">&times;</span>
+        <img id="fullSizeImage" src="" alt="Большое фото">
+    </div>
+
+    <script>
+        let currentItem = '';
+        let currentPrice = '';
+        let currentLang = 'ru';
+
+        const txt = {
+            ru: {
+                hero: "Underground drop // Baku",
+                btnBuy: "Забрать дроп",
+                modalTitle: "Оформление",
+                labelPhone: "Введи свой номер телефона",
+                btnSubmit: "Подтвердить в WhatsApp",
+                msg: "Привет! Хочу забрать вещь"
+            },
+            az: {
+                hero: "Yeraltı drop // Bakı",
+                btnBuy: "Dropu götür",
+                modalTitle: "Sifariş",
+                labelPhone: "Telefon nömrənizi daxil edin",
+                btnSubmit: "WhatsApp-da təsdiqləyin",
+                msg: "Salam! Bu malı almaq istəyirəm"
+            }
+        };
+
+        // Функции для большого просмотра фото
+        function viewImage(element) {
+            const imgSrc = element.querySelector('img').src;
+            document.getElementById('fullSizeImage').src = imgSrc;
+            document.getElementById('imageViewer').style.display = 'flex';
+        }
+
+        function closeImageViewer() {
+            document.getElementById('imageViewer').style.display = 'none';
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            if(event) event.target.classList.add('active');
+
+            document.getElementById('hero-text').innerText = txt[lang].hero;
+            document.getElementById('modalTitle').innerText = txt[lang].modalTitle;
+            document.getElementById('label-phone').innerText = txt[lang].labelPhone;
+            document.getElementById('btn-submit').innerText = txt[lang].btnSubmit;
+
+            document.querySelectorAll('.product-title').forEach(el => {
+                el.innerText = el.getAttribute('data-' + lang);
+            });
+
+            document.querySelectorAll('[data-btn]').forEach(el => {
+                el.innerText = txt[lang].btnBuy;
+            });
+        }
+
+        function openOrderModal(name, price) {
+            // Чтобы при клике на кнопку «купить» не открывалась большая фотка
+            if(event) event.stopPropagation(); 
+            
+            currentItem = name;
+            currentPrice = price;
+            
+            const currentCard = event.target.closest('.product-info');
+            const titleText = currentCard.querySelector('.product-title').innerText;
+
+            document.getElementById('modalProductTitle').innerText = titleText;
+            document.getElementById('modalProductPrice').innerText = price;
+            document.getElementById('orderModal').style.display = 'flex';
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        function sendToWhatsApp(event) {
+            event.preventDefault();
+            const phone = document.getElementById('userPhone').value;
+            const message = `${txt[currentLang].msg}: ${currentItem} (${currentPrice}). Nömrə: ${phone}`;
+            const whatsappUrl = `https://wa.me/995599454761?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            closeOrderModal();
+        }
+    </script>
+</body>
+</html>
